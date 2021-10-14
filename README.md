@@ -1,17 +1,4 @@
 # Proposition for an additonal syntax to Javascript:  await[timeoutInMs]
-Usage for promise:
-```js
-let someExpectedValue = await[3000] getSomeValueFromAPromise(); 
-```
-Here a pomise will either resolve before 3000 millisecond, or will get a timeout error (Do not fear errors!, its an intended timeout error, only comes in picture when timeout is mentioned)
-
-Usage for async for await loops
-```js
-for await[2500](let s of someAsynGeneratorOrStream){
-//do something
-}
-```
-Here again this loop will finish by at most 2500 milliseconds.
 
 # Detailed problem description and solution
 
@@ -154,6 +141,21 @@ Its pretty simple, its very clear what it intends to do:  `await for x amount of
 People have alwasy wanted cntrol on cancelling a promise and this is one such way.
 
 I hope that other people find it usefull and a good feature to have in lovely Javascript!
+
+# Usage
+Usage for promise:
+```js
+let someExpectedValue = await[3000] getSomeValueFromAPromise(); //always wrap await[timeInMs] in try catch
+```
+Here a pomise will either resolve before 3000 millisecond, or will get a timeout error (Do not fear errors!, its an intended timeout error, only comes in picture when timeout is mentioned)
+
+Usage for async for await loops
+```js
+for await[2500](let s of someAsynGeneratorOrStream){ //always wrap await[timeInMs] in try catch
+//do something
+}
+```
+Here again this loop will finish by at most 2500 milliseconds.
 
 # Comments are welcomed
 Please raise issues or support with this new syntax.
