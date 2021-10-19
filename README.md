@@ -65,6 +65,7 @@ Again there are codes to simulate this kind of timeout loops using `Promise.race
 1. Better control on developer end, rather than at mercy of asynchronouse function.
 2. Can give much more better understanding of how long can a particular line can at most take and can help pin point bottleneck in the code.
 3. Is very simple to implement, as the code simply generate Timeout error. `try/catch` and `async/await` are part of JS. An `await[timeInMs]` is possible source of a timeout Error, and hence compiler can pre warn user about potential timeout points in the code.
+4. Many time system developer develops a code with an assumtion, that code will resolve in time. But not with intention by when. But wher eis it documented, that a particular piece of code or programm was designed with an expectation that it will finish in a given time. This sytanx provide a precise documentaton of expetations from a line.
 
 # What are the fears, and they indeed are not to worry
 Argument: A code can't be made to break/interrupted in between, it can cause potential resource leaks. That is some resource which were supposed to clean up but were interrupted by timeout error, will be in leak stage.
