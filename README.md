@@ -5,7 +5,7 @@
 We all are aware with usage of **await** of a promise: it basically commands code to wait for a promise to resolve or reject..... but wait until upto when? Indefinitely actually!
 As of now any asynchronous promise based code's eventual destiny is at mercy of the asynchronous source. 
 
-The asyncronous source has full power to keep all resource on stack of an async process engaged on RAM, and developer seems to have no control on it, as async source can decide when should it resolve (or never resolve) a promise, there by engaging everything on RAM.
+The asynchronous source has full power to keep all resource on stack of an async process engaged on RAM, and developer seems to have no control on it, as async source can decide when should it resolve (or never resolve) a promise, there by engaging everything on RAM.
 
 Consider this code:
 ```js
@@ -62,10 +62,10 @@ A much better control in hands of a developer.
 Again there are codes to simulate this kind of timeout loops using `Promise.race`, but as like before `Promise.race` will ignore the value returned by LongRunning async code but will not stop it from holding RAM and values on stack until async promise it had is finished, even though we intended to ignore such timed out values.
 
 # Why is it required/matter ?
-1. Better control on developer end, rather than at mercy of asynchronouse function.
+1. Better control on developer end, rather than at mercy of asynchronous function.
 2. Can give much more better understanding of how long can a particular line can at most take and can help pin point bottleneck in the code.
 3. Is very simple to implement, as the code simply generate Timeout error. `try/catch` and `async/await` are part of JS. An `await[timeInMs]` is possible source of a timeout Error, and hence compiler can pre warn user about potential timeout points in the code.
-4. Many time system developer develops a code with an assumtion, that code will resolve in time. But not with intention by when. But wher eis it documented, that a particular piece of code or programm was designed with an expectation that it will finish in a given time. This sytanx provide a precise documentaton of expetations from a line.
+4. Many time system developer develops a code with an assumption, that code will resolve in time. But not with intention by when. But where is it documented, that a particular piece of code or program was designed with an expectation that it will finish in a given time. This syntax provide a precise documentation of expectations from a line.
 
 # What are the fears, and they indeed are not to worry
 Argument: A code can't be made to break/interrupted in between, it can cause potential resource leaks. That is some resource which were supposed to clean up but were interrupted by timeout error, will be in leak stage.
@@ -80,13 +80,16 @@ async function doLongRunningTask() {
   return resource
 } 
 ```
-If such a code is interrupted before a call to `connection.release()` is made, then it will evetually cause leak.
+If such a code is interrupted before a call to `connection.release()` is made, then it will eventually cause leak.
 ```js
 await[3000] doLongRunningTask();//its feared that this new syntax can cause leaks inside long running task, as if it takes too long it will raise an error and will not get time to call connection.release()
 ```
 
-But it should be noted that developer has deliberatly written `await[timeInMs]` , and user knows that it will cause an error to be raised.
+But it should be noted that developer has deliberately written `await[timeInMs]`, instead of normal await.
+Now a world without such syntax (Current system), such a user has designed a system with a wrong expectation from the API (As he has no idea about the API expected performance). The syntax `await[timeInMS]` instead is his savior, which gives an opportunity (by throwing error) to such user to be aware that his expectation are not correct, and this incorrect assumptions about the code , that the current code would in a given time completely wrong.
+Errors are not enemy, they instead tells what has gone beyond the expectation.
 **When something is deliberate, all repercussions, are not unexpected, they are intended outcomes.**
+When this error will be thrown and he can either tune timeInMs or he can simply modify the code to use normal await. Such a new system now had the opportunity to be properly tuned meet its assumptions (assumptions that a particular line will finish on time).
 
 User can create such **deliberate** problem, by writing a code as such to the same problem without using await[timeInMs]:
 **(example 1)**
