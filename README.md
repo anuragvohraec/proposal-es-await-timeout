@@ -86,8 +86,13 @@ await[3000] doLongRunningTask();//its feared that this new syntax can cause leak
 ```
 
 But it should be noted that developer has deliberately written `await[timeInMs]`, instead of normal await.
-Now a world without such syntax (Current system), such a user has designed a system with a wrong expectation from the API (As he has no idea about the API expected performance). The syntax `await[timeInMS]` instead is his savior, which gives an opportunity (by throwing error) to such user to be aware that his expectation are not correct, and this incorrect assumptions about the code , that the current code would in a given time completely wrong.
+Now a world without such syntax (Current systems), such a user has designed a system with a wrong expectation from the API (As he has no idea about the API expected performance(time by which in worst case it will finish)). The syntax `await[timeInMS]` instead is his savior, which gives an opportunity (by throwing error) to such user to be aware that his expectation are not correct.
 Errors are not enemy, they instead tells what has gone beyond the expectation.
+A user designed a system that an async function will return, however that assumotion is completly wrong in current scenario, as he has no control.
+With this new syntax, a user can have expecations from async lines when they will complete, and when it throws error, it gives indications to user that either the API he is using is not working under expected timeframe. Either he needs to update library, or he needs to tune `timeInMs`. He at least knows that current system is not workbale with such assumption.
+This can save himself instead from otherwise completely untraceable reason of error which would happen in such code designed with wrong expectation, as people who have coded with this assumptions, are by gone now.
+If instead a sytanx like this existed, every one would know exactly what was the expected intention at the line.
+
 **When something is deliberate, all repercussions, are not unexpected, they are intended outcomes.**
 When this error will be thrown and he can either tune timeInMs or he can simply modify the code to use normal await. Such a new system now had the opportunity to be properly tuned meet its assumptions (assumptions that a particular line will finish on time).
 
